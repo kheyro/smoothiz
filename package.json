@@ -1,7 +1,7 @@
 {
-  "name": "express-starter",
+  "name": "Smoothiz",
   "version": "1.0.0",
-  "description": "Express minimal starter kit with Ruby inspired file achitecture",
+  "description": "Smoothies social platform for smoothiz lovers!",
   "main": "run-server.js",
   "scripts": {
     "start": "node run-server.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kheyro/express-starter.git"
+    "url": "https://github.com/kheyro/smoothiz.git"
   },
   "keywords": [
     "expressjs",
