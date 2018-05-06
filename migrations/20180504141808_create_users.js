@@ -2,11 +2,11 @@ exports.up = (knex, Promise) =>
   Promise.all([
     knex.schema.createTable('users', tbl => {
       tbl.increments();
-      tbl.string('username');
+      tbl.string('username').unique();
       tbl.string('first_name');
       tbl.string('last_name');
-      tbl.string('password');
-      tbl.string('email');
+      tbl.string('password').notNullable();
+      tbl.string('email').unique();
       tbl.string('picture');
       tbl.date('birthday');
       tbl.timestamps();
