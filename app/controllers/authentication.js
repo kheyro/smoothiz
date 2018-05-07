@@ -1,4 +1,11 @@
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
+
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+  return jwt.sign({ sub: user.id, iat: timestamp }, process.env.JWT_SECRET);
+}
 
 const authenticationController = {
   signUp: (req, res, next) => {
@@ -18,7 +25,9 @@ const authenticationController = {
         }
         return User.forge({ email, password })
           .save()
-          .then(user => res.status(201).send({ success: true, user }))
+          .then(user =>
+            res.status(201).send({ success: true, token: tokenForUser(user) })
+          )
           .catch(err => next(err));
       });
   },
