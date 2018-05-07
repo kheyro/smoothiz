@@ -8,6 +8,9 @@ function tokenForUser(user) {
 }
 
 const authenticationController = {
+  signIn: (req, res) => {
+    res.send({ token: tokenForUser(req.user) });
+  },
   signUp: (req, res, next) => {
     const { email, password } = req.body;
 
