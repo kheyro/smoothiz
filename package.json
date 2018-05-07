@@ -34,7 +34,9 @@
     "supertest": "^3.0.0"
   },
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
+    "bookshelf": "^0.13.3",
     "cookie-parser": "^1.4.3",
     "debug": "^3.1.0",
     "dotenv": "^5.0.1",
