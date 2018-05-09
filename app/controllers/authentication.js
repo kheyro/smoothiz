@@ -9,7 +9,7 @@ function tokenForUser(user) {
 
 const authenticationController = {
   signIn: (req, res) => {
-    res.send({ token: tokenForUser(req.user) });
+    res.json({ token: tokenForUser(req.user) });
   },
   signUp: (req, res, next) => {
     const { email, password } = req.body;
@@ -24,7 +24,7 @@ const authenticationController = {
       .fetch()
       .then(model => {
         if (model) {
-          return res.status(406).send({ error: 'email already in use.' });
+          return res.status(406).json({ error: 'email already in use.' });
         }
         return User.forge({ email, password })
           .save()
