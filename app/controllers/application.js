@@ -1,6 +1,6 @@
 const appController = {
   getIndex: (req, res) => {
-    res.send('Hello world!');
+    res.send({ message: 'secret message' });
   }
 };
 
