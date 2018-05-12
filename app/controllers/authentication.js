@@ -9,7 +9,15 @@ function tokenForUser(user) {
 
 const authenticationController = {
   signIn: (req, res) => {
-    res.json({ token: tokenForUser(req.user) });
+    const { user } = req;
+    res.json({
+      token: tokenForUser(user),
+      user: {
+        id: user.id,
+        firstname: user.attributes.firstname,
+        lastname: user.attributes.lastname,
+      },
+    });
   },
   signUp: (req, res, next) => {
     const { firstname, lastname, email, password, birthday } = req.body;
@@ -28,7 +36,14 @@ const authenticationController = {
         return User.forge({ firstname, lastname, email, password, birthday })
           .save()
           .then(user =>
-            res.status(201).send({ success: true, token: tokenForUser(user) })
+            res.status(201).send({
+              token: tokenForUser(user),
+              user: {
+                id: user.id,
+                firstname: user.attributes.firstname,
+                lastname: user.attributes.lastname,
+              },
+            })
           )
           .catch(err => next(err));
       });
