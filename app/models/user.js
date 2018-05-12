@@ -1,10 +1,15 @@
-const bookshelf = require('../../config/bookshelf');
 const bcrypt = require('bcrypt');
+const bookshelf = require('../../config/bookshelf');
+const Smoothy = require('./smoothy');
 
 const User = bookshelf.Model.extend({
   tableName: 'users',
+  hasTimestamps: true,
   initialize() {
     this.on('creating', this.encryptPassword);
+  },
+  smoothies: function() {
+    this.hasMany(Smoothy);
   },
   encryptPassword: model =>
     bcrypt
