@@ -12,8 +12,7 @@ const authenticationController = {
     res.json({ token: tokenForUser(req.user) });
   },
   signUp: (req, res, next) => {
-    const { email, password } = req.body;
-
+    const { firstname, lastname, email, password, birthday } = req.body;
     if (!email || !password) {
       return res
         .status(406)
@@ -26,7 +25,7 @@ const authenticationController = {
         if (model) {
           return res.status(406).json({ error: 'email already in use.' });
         }
-        return User.forge({ email, password })
+        return User.forge({ firstname, lastname, email, password, birthday })
           .save()
           .then(user =>
             res.status(201).send({ success: true, token: tokenForUser(user) })
