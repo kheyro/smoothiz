@@ -7,7 +7,7 @@ exports.up = (knex, Promise) =>
       tbl.text('description');
       tbl.text('recipe');
       tbl.integer('visibility');
-      tbl.integer('views');
+      tbl.integer('views').defaultTo(0);
       tbl.timestamps(true, true);
     }),
   ]);
