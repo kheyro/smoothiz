@@ -3,3 +3,4 @@ client/node_modules
 .env
 .idea
 smoothiz-client
+.DS_STORE
