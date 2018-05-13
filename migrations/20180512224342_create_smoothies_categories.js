@@ -2,8 +2,8 @@ exports.up = (knex, Promise) =>
   Promise.all([
     knex.schema.createTable('smoothies_categories', tbl => {
       tbl.increments();
-      tbl.integer('smoothies_id').references('smoothies.id');
-      tbl.integer('categories_id').references('categories.id');
+      tbl.integer('smoothy_id').references('smoothies.id');
+      tbl.integer('category_id').references('categories.id');
     }),
   ]);
 
