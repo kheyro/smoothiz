@@ -9,7 +9,7 @@ const User = bookshelf.Model.extend({
     this.on('creating', this.encryptPassword);
   },
   smoothies: function() {
-    this.hasMany(Smoothy);
+    return this.hasMany(Smoothy);
   },
   encryptPassword: model =>
     bcrypt
