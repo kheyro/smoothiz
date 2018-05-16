@@ -7,10 +7,9 @@ const smoothyController = {
       description,
       recipe,
       visibility,
-      user_id,
-      category_ids
     } = req.body;
-
+    const user_id = req.user.id; // user data sent from passport
+    const category_ids = req.body.categoryIds;
     Smoothy.forge({ name, description, recipe, visibility, user_id })
       .save()
       .then(smoothy => {
