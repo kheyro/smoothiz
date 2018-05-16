@@ -10,7 +10,7 @@ const userController = {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(' ')[1];
       jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err || decoded === 'undefined') {
+        if (err || decoded === 'undefined' || decoded.sub !== req.params.id) {
           // return only the public smoothies
           loggedIn = false;
           return console.log('not valid', err);
