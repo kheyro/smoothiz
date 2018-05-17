@@ -49,6 +49,14 @@ const smoothyController = {
       })
       .catch(err => next(err));
   },
+  deleteSmoothie: (req, res, next) => {
+    const smoothieId = req.params.id;
+    // const user_id = req.user.id; // user data sent from passport
+    Smoothy.forge({ id: smoothieId })
+      .destroy()
+      .then(() => res.status(200).json({ success: true }))
+      .catch(err => next(err));
+  },
 };
 
 module.exports = smoothyController;
