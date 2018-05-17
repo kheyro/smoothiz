@@ -51,7 +51,14 @@ const smoothyController = {
   },
   deleteSmoothie: (req, res, next) => {
     const smoothieId = req.params.id;
-    // const user_id = req.user.id; // user data sent from passport
+    const user_id = req.user.id; // user data sent from passport
+    // Check user ownership
+    Smoothy.forge({ id: smoothieId })
+      .fetch()
+      .then(smt => {
+        if (smt.attributes.user_id !== user_id) res.sendStatus(401);
+      })
+      .catch(err => next(err));
     Smoothy.forge({ id: smoothieId })
       .destroy()
       .then(() => res.status(200).json({ success: true }))
