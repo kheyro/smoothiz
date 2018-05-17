@@ -24,9 +24,13 @@ const userController = {
 
     return User.forge({ id: userId })
       .fetch({
-        withRelated: {
-          smoothies: query => (loggedIn ? query : query.where('visibility', 0)),
-        },
+        withRelated: [
+          {
+            smoothies: query =>
+              loggedIn ? query : query.where('visibility', 0),
+          },
+          'smoothies.categories',
+        ],
       })
       .then(user => {
         const filteredUser = user;
