@@ -12,7 +12,10 @@ router.route('/signin').post(requireSignin, c.authentication.signIn);
 router.route('/signup').post(c.authentication.signUp);
 
 router.route('/smoothies').post(requireAuth, c.smoothy.createSmoothy);
-router.route('/smoothies/:id').patch(requireAuth, c.smoothy.editSmoothie);
+router
+  .route('/smoothies/:id')
+  .patch(requireAuth, c.smoothy.editSmoothie)
+  .delete(c.smoothy.deleteSmoothie);
 
 router.route('/categories').get(c.category.getAll);
 router.route('/users/:id').get(c.user.getUser);
