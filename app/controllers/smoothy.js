@@ -33,7 +33,7 @@ const smoothyController = {
       description,
       recipe,
       visibility,
-      user_id: 1,
+      user_id,
     })
       .save()
       .then(smoothy => {
