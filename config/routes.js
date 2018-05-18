@@ -14,6 +14,7 @@ router.route('/signup').post(c.authentication.signUp);
 router.route('/smoothies').post(requireAuth, c.smoothy.createSmoothy);
 router
   .route('/smoothies/:id')
+  .get(c.smoothy.getSmoothie)
   .patch(requireAuth, c.smoothy.editSmoothie)
   .delete(requireAuth, c.smoothy.deleteSmoothie);
 
