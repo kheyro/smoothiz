@@ -1,6 +1,18 @@
 const Smoothy = require('../models/smoothy');
 
 const smoothyController = {
+  getSmoothie: (req, res, next) => {
+    const smoothieId = +req.params.id;
+    Smoothy.forge({ id: smoothieId })
+      .fetch({
+        withRelated: [
+          { user: qb => qb.column('id', 'firstname', 'lastname') },
+          'categories',
+        ],
+      })
+      .then(smoothie => res.json({ smoothie }))
+      .catch(err => next(err));
+  },
   createSmoothy: (req, res, next) => {
     const { name, description, recipe, visibility } = req.body;
     const user_id = req.user.id; // user data sent from passport
