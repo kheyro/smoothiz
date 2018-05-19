@@ -7,11 +7,14 @@ const Smoothy = bookshelf.Model.extend(
   {
     tableName: 'smoothies',
     hasTimestamps: true,
-    users: function() {
-      return this.belongsTo(User);
+    user: function() {
+      return this.belongsTo('User');
     },
     categories: function() {
-      return this.belongsToMany(Category, 'smoothies_categories');
+      return this.belongsToMany('Category', 'smoothies_categories');
+    },
+    likeUsers: function() {
+      return this.belongsToMany('User', 'likes');
     },
   },
   {

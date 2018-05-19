@@ -11,6 +11,9 @@ const User = bookshelf.Model.extend({
   smoothies: function() {
     return this.hasMany(Smoothy);
   },
+  likeSmoothies: function() {
+    return this.belongToMany('Smoothy', 'likes');
+  },
   encryptPassword: model =>
     bcrypt
       .hash(model.attributes.password, 10)
