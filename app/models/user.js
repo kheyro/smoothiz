@@ -12,7 +12,7 @@ const User = bookshelf.Model.extend({
     return this.hasMany(Smoothy);
   },
   likeSmoothies: function() {
-    return this.belongToMany('Smoothy', 'likes');
+    return this.belongsToMany('Smoothy', 'likes');
   },
   encryptPassword: model =>
     bcrypt
