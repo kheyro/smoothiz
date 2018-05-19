@@ -30,6 +30,7 @@ const userController = {
               loggedIn ? query : query.where('visibility', 0),
           },
           'smoothies.categories',
+          'likeSmoothies',
         ],
       })
       .then(user => {
