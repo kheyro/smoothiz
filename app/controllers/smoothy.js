@@ -100,7 +100,21 @@ const smoothyController = {
         smoothie.likeUsers().attach(userId);
         res.sendStatus(200);
       })
-      .catch(err => console.log(err));
+      .catch(err => next(err));
+  },
+  dislikeSmoothie: (req, res, next) => {
+    const smoothieId = req.params.id;
+    const userId = req.user.id;
+    Smoothy.forge({ id: smoothieId })
+      .fetch()
+      .then(smoothie => {
+        smoothie
+          .likeUsers()
+          .detach(userId)
+          .then(() => res.sendStatus(200))
+          .catch(err => next(err));
+      })
+      .catch(err => next(err));
   },
 };
 
