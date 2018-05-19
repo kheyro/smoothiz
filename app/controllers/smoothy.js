@@ -10,7 +10,13 @@ const smoothyController = {
           'categories',
         ],
       })
-      .then(smoothie => res.json({ smoothie }))
+      .then(smoothie =>
+        smoothie
+          .set({ views: smoothie.attributes.views + 1 })
+          .save()
+          .then(updatedSmoothie => res.json({ smoothie: updatedSmoothie }))
+          .catch(err => next(err))
+      )
       .catch(err => next(err));
   },
   createSmoothy: (req, res, next) => {
