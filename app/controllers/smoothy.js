@@ -82,6 +82,17 @@ const smoothyController = {
       .then(() => res.status(200).json({ success: true }))
       .catch(err => next(err));
   },
+  likeSmoothie: (req, res, next) => {
+    const smoothieId = req.params.id;
+    const userId = req.user.id;
+    Smoothy.forge({ id: smoothieId })
+      .fetch()
+      .then(smoothie => {
+        smoothie.likeUsers().attach(userId);
+        res.sendStatus(200);
+      })
+      .catch(err => console.log(err));
+  },
 };
 
 module.exports = smoothyController;
