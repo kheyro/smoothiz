@@ -17,6 +17,7 @@ router
   .get(c.smoothy.getSmoothie)
   .patch(requireAuth, c.smoothy.editSmoothie)
   .delete(requireAuth, c.smoothy.deleteSmoothie);
+router.route('/smoothies/:id/like').get(requireAuth, c.smoothy.likeSmoothie);
 
 router.route('/categories').get(c.category.getAll);
 router.route('/users/:id').get(c.user.getUser);
