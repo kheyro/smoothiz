@@ -8,15 +8,24 @@ const smoothyController = {
         withRelated: [
           { user: qb => qb.column('id', 'firstname', 'lastname') },
           'categories',
+          { likeUsers: qb => qb.column('user_id') },
         ],
       })
-      .then(smoothie =>
-        smoothie
+      .then(smoothie => {
+        return smoothie
           .set({ views: smoothie.attributes.views + 1 })
           .save()
-          .then(updatedSmoothie => res.json({ smoothie: updatedSmoothie }))
-          .catch(err => next(err))
-      )
+          .then(updatedSmoothie => {
+            // const likeSmoothie = Object.assign({}, updatedSmoothie, {
+            //   attributes: {
+            //     ...updatedSmoothie.attributes,
+            //     likes: updatedSmoothie.relations.likeUsers.length,
+            //   },
+            // });
+            res.json({ smoothie: updatedSmoothie });
+          })
+          .catch(err => next(err));
+      })
       .catch(err => next(err));
   },
   createSmoothy: (req, res, next) => {
