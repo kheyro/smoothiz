@@ -18,7 +18,7 @@ const Smoothy = bookshelf.Model.extend(
     },
   },
   {
-    dependents: ['categories'],
+    dependents: ['categories', 'likeUsers'],
   }
 );
 
