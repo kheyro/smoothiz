@@ -97,8 +97,11 @@ const smoothyController = {
     Smoothy.forge({ id: smoothieId })
       .fetch()
       .then(smoothie => {
-        smoothie.likeUsers().attach(userId);
-        res.sendStatus(200);
+        smoothie
+          .likeUsers()
+          .attach(userId)
+          .then(() => res.sendStatus(200))
+          .catch(err => next(err));
       })
       .catch(err => next(err));
   },
