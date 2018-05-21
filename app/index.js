@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
 const routes = require('../config/routes');
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(bodyParser.json({ type: '*/*' })); // { type: '*/*' }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(passport.initialize()); //  not really useful in our case as we don't use session
 
 app.use('/', routes);
 
