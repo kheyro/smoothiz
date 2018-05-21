@@ -6,10 +6,23 @@ const c = require('../app/controllers');
 const router = express.Router();
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
+const requireFacebook = passport.authenticate('facebook', {
+  scope: ['user_birthday', 'user_gender'],
+  session: false,
+});
 
 router.route('/').get(c.application.getIndex);
 router.route('/signin').post(requireSignin, c.authentication.signIn);
 router.route('/signup').post(c.authentication.signUp);
+router.route('/auth/facebook').get(requireFacebook);
+router.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/signin/',
+    session: false,
+  })
+);
 
 router.route('/smoothies').post(requireAuth, c.smoothy.createSmoothy);
 router
