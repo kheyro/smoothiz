@@ -61,14 +61,23 @@ const facebookLogin = new FacebookStrategy(
     ],
   },
   (accessToken, refreshToken, profile, done) => {
-    console.log('accessTOKEN', accessToken, profile, done);
-    User.forge({ id: 1 })
+    const userInfo = profile._json;
+    User.forge({ email: userInfo.email })
       .fetch()
       .then(user => {
         if (user) {
           done(null, user);
         } else {
-          done(null, false);
+          User.forge({
+            email: userInfo.email,
+            firstname: userInfo.first_name,
+            lastname: userInfo.last_name,
+            password: 'random', // need to generate random password
+            birthday: userInfo.birthday,
+          })
+            .save()
+            .then(createdUser => done(null, createdUser))
+            .catch(err => done(err, false));
         }
       })
       .catch(err => done(err, false));
