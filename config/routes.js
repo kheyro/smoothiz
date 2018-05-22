@@ -18,10 +18,10 @@ router.route('/auth/facebook').get(requireFacebook);
 router.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', {
-    successRedirect: '/',
     failureRedirect: '/signin/',
     session: false,
-  })
+  }),
+  c.authentication.socialSignIn
 );
 
 router.route('/smoothies').post(requireAuth, c.smoothy.createSmoothy);
