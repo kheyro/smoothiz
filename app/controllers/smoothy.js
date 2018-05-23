@@ -1,4 +1,5 @@
 const Smoothy = require('../models/smoothy');
+const Category = require('../models/category');
 
 const smoothyController = {
   getSmoothie: (req, res, next) => {
@@ -16,19 +17,35 @@ const smoothyController = {
           .set({ views: smoothie.attributes.views + 1 })
           .save()
           .then(updatedSmoothie => {
-            // const likeSmoothie = Object.assign({}, updatedSmoothie, {
-            //   attributes: {
-            //     ...updatedSmoothie.attributes,
-            //     likes: updatedSmoothie.relations.likeUsers.length,
-            //   },
-            // });
+            console.log(updatedSmoothie.toJSON());
             res.json({ smoothie: updatedSmoothie });
           })
           .catch(err => next(err));
       })
       .catch(err => next(err));
   },
-  createSmoothy: (req, res, next) => {
+  getSmoothies: (req, res, next) => {
+    if (req.params.categoryId) {
+      return Category.where({ id: +req.params.categoryId })
+        .fetch({
+          withRelated: [
+            {
+              smoothies: qb => qb.where('visibility', 0),
+            },
+          ],
+        })
+        .then(category => {
+          const smoothies = category.related('smoothies');
+          res.json({ smoothies });
+        })
+        .catch(err => next(err));
+    }
+    return Smoothy.where({ visibility: 0 })
+      .fetchAll()
+      .then(smoothies => res.json({ smoothies }))
+      .catch(err => next(err));
+  },
+  createSmoothie: (req, res, next) => {
     const { name, description, recipe, visibility } = req.body;
     const user_id = req.user.id; // user data sent from passport
     const category_ids = req.body.categoryIds;
