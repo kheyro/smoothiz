@@ -25,12 +25,10 @@ const userController = {
     return User.forge({ id: userId })
       .fetch({
         withRelated: [
-          {
-            smoothies: query =>
-              loggedIn ? query : query.where('visibility', 0),
-          },
+          { smoothies: qb => loggedIn ? qb : qb.where('visibility', 0), },
           'smoothies.categories',
           'likeSmoothies',
+          { 'smoothies.user': qb => qb.column('id') },
         ],
       })
       .then(user => {
