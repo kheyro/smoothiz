@@ -4,7 +4,7 @@ const Smoothy = require('./smoothy');
 const Category = bookshelf.Model.extend({
   tableName: 'categories',
   smoothies: function() {
-    return this.belongsToMany(Smoothy, 'smoothies_categories');
+    return this.belongsToMany('Smoothy', 'smoothies_categories');
   },
 });
 
