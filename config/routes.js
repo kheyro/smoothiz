@@ -24,7 +24,10 @@ router.get(
   c.authentication.socialSignIn
 );
 
-router.route('/smoothies').post(requireAuth, c.smoothy.createSmoothy);
+router
+  .route('/smoothies')
+  .get(c.smoothy.getSmoothies)
+  .post(requireAuth, c.smoothy.createSmoothie);
 router
   .route('/smoothies/:id')
   .get(c.smoothy.getSmoothie)
@@ -34,6 +37,7 @@ router.route('/smoothies/:id/like').get(requireAuth, c.smoothy.likeSmoothie);
 router.route('/smoothies/:id/dislike').get(requireAuth, c.smoothy.dislikeSmoothie);
 
 router.route('/categories').get(c.category.getAll);
+router.get('/categories/:categoryId/smoothies', c.smoothy.getSmoothies);
 router.route('/users/:id').get(c.user.getUser);
 
 module.exports = router;
