@@ -30,7 +30,7 @@ const smoothyController = {
         .fetch({
           withRelated: [
             {
-              smoothies: qb => qb.where('visibility', 0),
+              smoothies: qb => qb.where('visibility', 0).orderByRaw('created_at DESC'),
             },
           ],
         })
@@ -41,6 +41,7 @@ const smoothyController = {
         .catch(err => next(err));
     }
     return Smoothy.where({ visibility: 0 })
+      .query(qb => qb.orderByRaw('created_at DESC'))
       .fetchAll()
       .then(smoothies => res.json({ smoothies }))
       .catch(err => next(err));
