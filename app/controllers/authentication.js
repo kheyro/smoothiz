@@ -35,7 +35,7 @@ const authenticationController = {
         if (model) {
           return res.status(406).json({ error: 'email already in use.' });
         }
-        return User.forge({ firstname, lastname, email, password, birthday })
+        return User.forge({ firstname, lastname, email, password, birthday, picture: req.file.filename })
           .save()
           .then(user =>
             res.status(201).send({
