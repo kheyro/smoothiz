@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const multer = require('multer');
 const path = require('path');
+const crypto = require('crypto');
+const mime = require('mime');
 require('./passport'); // Passport services
 const c = require('../app/controllers');
 
@@ -23,8 +25,8 @@ const storage = multer.diskStorage({
     cb(null, './uploads/profile/');
   },
   filename: (req, file, cb) => {
-    crypto.pseudoRandomBytes(16, (err, raw) => {
-      cb(null, raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype));
+    crypto.pseudoRandomBytes(12, (err, raw) => {
+      cb(null, raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype));
     });
   },
 });
