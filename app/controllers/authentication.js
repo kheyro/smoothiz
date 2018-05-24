@@ -21,7 +21,8 @@ const authenticationController = {
     });
   },
   signUp: (req, res, next) => {
-    const { firstname, lastname, email, password, birthday } = req.body;
+    const user = JSON.parse(req.body.user); // JSON.stringifyed in action creator
+    const { firstname, lastname, email, password, birthday } = user;
     if (!email || !password) {
       return res
         .status(406)
