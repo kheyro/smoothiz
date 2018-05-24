@@ -13,7 +13,7 @@ const app = express();
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(cors());
-app.use(bodyParser.json({ type: '*/*' })); // { type: '*/*' }
+app.use(bodyParser.json()); // { type: '*/*' }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize()); //  not really useful in our case as we don't use session
