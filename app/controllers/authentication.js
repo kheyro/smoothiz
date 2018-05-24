@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const sharp = require('sharp');
 
 const globals = require('../../config/globals');
 const User = require('../models/user');
@@ -37,16 +38,27 @@ const authenticationController = {
         }
         return User.forge({ firstname, lastname, email, password, birthday, picture: req.file.filename })
           .save()
-          .then(user =>
-            res.status(201).send({
+          .then(user => {
+            if (req.file) {
+              sharp(req.file.path)
+                .resize(200, 200)
+                .toFile(
+                  `${req.file.destination}r/${req.file.filename}`,
+                  err => {
+                    if (err) next(err);
+                  }
+                );
+            }
+
+            return res.status(201).send({
               token: tokenForUser(user),
               user: {
                 id: user.id,
                 firstname: user.attributes.firstname,
                 lastname: user.attributes.lastname,
               },
-            })
-          )
+            });
+          })
           .catch(err => next(err));
       });
   },
