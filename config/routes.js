@@ -1,7 +1,39 @@
 const express = require('express');
 const passport = require('passport');
+const multer = require('multer');
+const path = require('path');
 require('./passport'); // Passport services
 const c = require('../app/controllers');
+
+const fileFilter = (req, file, cb) => {
+  const filetypes = /jpg|jpeg|png|gif/;
+  const mimetype = filetypes.test(file.mimetype);
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  if (mimetype && extname) {
+    return cb(null, true);
+  }
+  return cb(
+    new Error(`
+    Error: File upload only supports the following filetypes - ${filetypes}`)
+  );
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/profile/');
+  },
+  filename: (req, file, cb) => {
+    crypto.pseudoRandomBytes(16, (err, raw) => {
+      cb(null, raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype));
+    });
+  },
+});
+
+const uploadProfilePic = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 500000 },
+});
 
 const router = express.Router();
 const requireAuth = passport.authenticate('jwt', { session: false });
@@ -13,7 +45,7 @@ const requireFacebook = passport.authenticate('facebook', {
 
 router.route('/').get(c.application.getIndex);
 router.route('/signin').post(requireSignin, c.authentication.signIn);
-router.route('/signup').post(c.authentication.signUp);
+router.route('/signup').post(uploadProfilePic.single('picture'), c.authentication.signUp);
 router.route('/auth/facebook').get(requireFacebook);
 router.get(
   '/auth/facebook/callback',
