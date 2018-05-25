@@ -2,6 +2,8 @@ const bookshelf = require('../../config/bookshelf');
 
 const User = require('./user');
 const Category = require('./category');
+const Ingredient = require('./ingredient');
+const Quantity = require('./quantity');
 
 const Smoothy = bookshelf.Model.extend(
   {
@@ -16,9 +18,15 @@ const Smoothy = bookshelf.Model.extend(
     likeUsers: function() {
       return this.belongsToMany('User', 'likes');
     },
+    quantities: function() {
+      return this.hasMany('Quantity');
+    },
+    ingredients: function() {
+      return this.hasMany('Ingredient').through('Quantity');
+    },
   },
   {
-    dependents: ['categories', 'likeUsers'],
+    dependents: ['categories', 'likeUsers', 'quantities'],
   }
 );
 
