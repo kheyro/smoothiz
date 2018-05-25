@@ -4,6 +4,7 @@ exports.up = (knex, Promise) =>
       tbl.increments();
       tbl.integer('smoothy_id').references('smoothies.id');
       tbl.integer('category_id').references('categories.id');
+      tbl.unique(['smoothy_id', 'category_id']);
     }),
   ]);
 

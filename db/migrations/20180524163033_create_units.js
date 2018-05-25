@@ -2,7 +2,7 @@ exports.up = (knex, Promise) =>
   Promise.all([
     knex.schema.createTable('units', tbl => {
       tbl.increments();
-      tbl.string('name');
+      tbl.string('name').unique();
     }),
   ]);
 
