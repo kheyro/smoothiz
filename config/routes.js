@@ -73,7 +73,7 @@ router.route('/smoothies/:id/dislike').get(requireAuth, c.smoothy.dislikeSmoothi
 router.route('/categories').get(c.category.getAll);
 router.get('/categories/:categoryId/smoothies', c.smoothy.getSmoothies);
 router.route('/users/:id').get(c.user.getUser);
-router.route('/units').get(c.smoothy.getUnits);
-router.route('/ingredients').get(c.smoothy.getAll);
+router.route('/units').get(c.unit.getAll);
+router.route('/ingredients').get(c.ingredient.getAll);
 
 module.exports = router;
