@@ -61,7 +61,7 @@ router.get(
 router
   .route('/smoothies')
   .get(c.smoothy.getSmoothies)
-  .post(c.smoothy.createSmoothie);
+  .post(requireAuth, c.smoothy.createSmoothie);
 router
   .route('/smoothies/:id')
   .get(c.smoothy.getSmoothie)
