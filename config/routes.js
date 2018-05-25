@@ -61,7 +61,7 @@ router.get(
 router
   .route('/smoothies')
   .get(c.smoothy.getSmoothies)
-  .post(requireAuth, c.smoothy.createSmoothie);
+  .post(c.smoothy.createSmoothie);
 router
   .route('/smoothies/:id')
   .get(c.smoothy.getSmoothie)
@@ -73,5 +73,6 @@ router.route('/smoothies/:id/dislike').get(requireAuth, c.smoothy.dislikeSmoothi
 router.route('/categories').get(c.category.getAll);
 router.get('/categories/:categoryId/smoothies', c.smoothy.getSmoothies);
 router.route('/users/:id').get(c.user.getUser);
+router.route('/units').get(c.smoothy.getUnits);
 
 module.exports = router;
