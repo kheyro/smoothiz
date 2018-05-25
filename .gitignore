@@ -4,3 +4,6 @@ client/node_modules
 .idea
 smoothiz-client
 .DS_STORE
+uploads/*
+!uploads/r
+uploads/r/*
