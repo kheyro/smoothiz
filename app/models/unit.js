@@ -1,5 +1,7 @@
 const bookshelf = require('../../config/bookshelf');
 
+const Smoothy = require('./smoothy');
+
 const Unit = bookshelf.Model.extend({
   tableName: 'units',
   quantities: function() {
