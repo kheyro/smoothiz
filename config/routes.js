@@ -74,5 +74,6 @@ router.route('/categories').get(c.category.getAll);
 router.get('/categories/:categoryId/smoothies', c.smoothy.getSmoothies);
 router.route('/users/:id').get(c.user.getUser);
 router.route('/units').get(c.smoothy.getUnits);
+router.route('/ingredients').get(c.smoothy.getAll);
 
 module.exports = router;
