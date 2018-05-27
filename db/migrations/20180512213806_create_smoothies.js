@@ -6,6 +6,7 @@ exports.up = (knex, Promise) =>
       tbl.string('name');
       tbl.text('description');
       tbl.text('recipe');
+      tbl.text('pictures');
       tbl.integer('visibility');
       tbl.integer('views').defaultTo(0);
       tbl.timestamps(true, true);
