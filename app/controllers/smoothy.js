@@ -1,5 +1,6 @@
 const Smoothy = require('../models/smoothy');
 const Category = require('../models/category');
+const Promise = require('bluebird');
 
 const smoothyController = {
   getSmoothie: (req, res, next) => {
@@ -10,6 +11,9 @@ const smoothyController = {
           { user: qb => qb.column('id', 'firstname', 'lastname') },
           'categories',
           { likeUsers: qb => qb.column('user_id') },
+          'quantities',
+          'quantities.ingredient',
+          'quantities.unit',
         ],
       })
       .then(smoothie => {
@@ -49,9 +53,22 @@ const smoothyController = {
   createSmoothie: (req, res, next) => {
     const { name, description, recipe, visibility } = req.body;
     const user_id = req.user.id; // user data sent from passport
+    const quantities = req.body.ingredients;
+    // reformat property name
+    for (let i = 0; i < quantities.length; i += 1) {
+      quantities[i].unit_id = quantities[i].unitId;
+      quantities[i].ingredient_id = quantities[i].ingredientId;
+      delete quantities[i].unitId;
+      delete quantities[i].ingredientId;
+    }
     const category_ids = req.body.categoryIds;
     Smoothy.forge({ name, description, recipe, visibility, user_id })
       .save()
+      .tap(smoothy =>
+        Promise.map(quantities, quantity =>
+          smoothy.related('quantities').create(quantity)
+        )
+      )
       .then(smoothy => {
         smoothy.categories().attach(category_ids);
         res.status(201).send({
@@ -65,6 +82,14 @@ const smoothyController = {
     const smoothieId = req.params.id;
     const user_id = req.user.id; // user data sent from passport
     const category_ids = req.body.categoryIds;
+    const quantities = req.body.ingredients;
+    // reformat property name
+    for (let i = 0; i < quantities.length; i += 1) {
+      quantities[i].unit_id = quantities[i].unitId;
+      quantities[i].ingredient_id = quantities[i].ingredientId;
+      delete quantities[i].unitId;
+      delete quantities[i].ingredientId;
+    }
     // make sure it belongs to the right user requesting change
     Smoothy.forge({ id: smoothieId })
       .fetch()
@@ -81,6 +106,11 @@ const smoothyController = {
       user_id,
     })
       .save()
+      .tap(smoothie =>
+        Promise.map(quantities, quantity =>
+          smoothie.related('quantities').create(quantity)
+        )
+      )
       .then(smoothy => {
         // Delete all categories and re-add them
         smoothy
