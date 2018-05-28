@@ -31,8 +31,25 @@ const storage = multer.diskStorage({
   },
 });
 
+const storageSmoothie = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/smoothie/');
+  },
+  filename: (req, file, cb) => {
+    crypto.pseudoRandomBytes(8, (err, raw) => {
+      cb(null, raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype));
+    });
+  },
+});
+
 const uploadProfilePic = multer({
   storage,
+  fileFilter,
+  limits: { fileSize: 500000 },
+});
+
+const uploadSmoothiePic = multer({
+  storage: storageSmoothie,
   fileFilter,
   limits: { fileSize: 500000 },
 });
@@ -61,7 +78,10 @@ router.get(
 router
   .route('/smoothies')
   .get(c.smoothy.getSmoothies)
-  .post(requireAuth, c.smoothy.createSmoothie);
+  .post(
+    [requireAuth, uploadSmoothiePic.single('pictures')],
+    c.smoothy.createSmoothie
+  );
 router
   .route('/smoothies/:id')
   .get(c.smoothy.getSmoothie)
