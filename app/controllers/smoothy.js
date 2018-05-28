@@ -65,7 +65,7 @@ const smoothyController = {
       delete quantities[i].unitId;
       delete quantities[i].ingredientId;
     }
-    const category_ids = req.body.categoryIds;
+    const category_ids = smoothie.categoryIds;
     Smoothy.forge({
       name,
       description,
