@@ -85,7 +85,10 @@ router
 router
   .route('/smoothies/:id')
   .get(c.smoothy.getSmoothie)
-  .patch(requireAuth, c.smoothy.editSmoothie)
+  .patch(
+    [requireAuth, uploadSmoothiePic.single('pictures')],
+    c.smoothy.editSmoothie
+  )
   .delete(requireAuth, c.smoothy.deleteSmoothie);
 router.route('/smoothies/:id/like').get(requireAuth, c.smoothy.likeSmoothie);
 router.route('/smoothies/:id/dislike').get(requireAuth, c.smoothy.dislikeSmoothie);
