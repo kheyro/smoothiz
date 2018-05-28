@@ -1,6 +1,7 @@
 const Smoothy = require('../models/smoothy');
 const Category = require('../models/category');
 const Promise = require('bluebird');
+const sharp = require('sharp');
 
 const smoothyController = {
   getSmoothie: (req, res, next) => {
@@ -51,9 +52,11 @@ const smoothyController = {
       .catch(err => next(err));
   },
   createSmoothie: (req, res, next) => {
-    const { name, description, recipe, visibility } = req.body;
+    const smoothie = JSON.parse(req.body.smoothie);
+    const { name, description, recipe, visibility } = smoothie;
     const user_id = req.user.id; // user data sent from passport
-    const quantities = req.body.ingredients;
+    const quantities = smoothie.ingredients;
+    const pictures = req.file ? req.file.filename : '';
     // reformat property name
     for (let i = 0; i < quantities.length; i += 1) {
       quantities[i].unit_id = quantities[i].unitId;
@@ -62,7 +65,14 @@ const smoothyController = {
       delete quantities[i].ingredientId;
     }
     const category_ids = req.body.categoryIds;
-    Smoothy.forge({ name, description, recipe, visibility, user_id })
+    Smoothy.forge({
+      name,
+      description,
+      recipe,
+      visibility,
+      user_id,
+      pictures,
+    })
       .save()
       .tap(smoothy =>
         Promise.map(quantities, quantity =>
@@ -71,6 +81,13 @@ const smoothyController = {
       )
       .then(smoothy => {
         smoothy.categories().attach(category_ids);
+        if (req.file) {
+          sharp(req.file.path)
+            .resize(1000, 1000)
+            .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
+              if (err) next(err);
+            });
+        }
         res.status(201).send({
           smoothy: smoothy.id,
         });
