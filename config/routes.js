@@ -8,7 +8,7 @@ require('./passport'); // Passport services
 const c = require('../app/controllers');
 
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpg|jpeg|png|gif/;
+  const filetypes = /jpg|jpeg|png/;
   const mimetype = filetypes.test(file.mimetype);
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   if (mimetype && extname) {
