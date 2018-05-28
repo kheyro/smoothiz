@@ -2,6 +2,7 @@ const Smoothy = require('../models/smoothy');
 const Category = require('../models/category');
 const Promise = require('bluebird');
 const sharp = require('sharp');
+const fs = require('fs');
 
 const smoothyController = {
   getSmoothie: (req, res, next) => {
@@ -145,6 +146,12 @@ const smoothyController = {
               if (err) next(err);
             });
           // delete previous pictures
+          fs.unlink(`./uploads/smoothie/${editPictures}`, err => {
+            if (err) next(err);
+          });
+          fs.unlink(`./uploads/smoothie/r/${editPictures}`, err => {
+            if (err) next(err);
+          });
         }
         res.status(200).send({
           smoothy: smoothy.id,
@@ -155,16 +162,27 @@ const smoothyController = {
   deleteSmoothie: (req, res, next) => {
     const smoothieId = req.params.id;
     const user_id = req.user.id; // user data sent from passport
+    let pictures;
     // Check user ownership
     Smoothy.forge({ id: smoothieId })
       .fetch()
       .then(smt => {
         if (smt.attributes.user_id !== user_id) res.sendStatus(401);
+        ({ pictures } = smt.attributes);
       })
       .catch(err => next(err));
     Smoothy.forge({ id: smoothieId })
       .destroy()
-      .then(() => res.status(200).json({ success: true }))
+      .then(() => {
+        // pictures is set from previous fetch
+        fs.unlink(`./uploads/smoothie/${pictures}`, err => {
+          if (err) next(err);
+        });
+        fs.unlink(`./uploads/smoothie/r/${pictures}`, err => {
+          if (err) next(err);
+        });
+        res.status(200).json({ success: true });
+      })
       .catch(err => next(err));
   },
   likeSmoothie: (req, res, next) => {
