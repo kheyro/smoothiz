@@ -95,11 +95,13 @@ const smoothyController = {
       .catch(err => next(err));
   },
   editSmoothie: (req, res, next) => {
-    const { name, description, recipe, visibility } = req.body;
+    const smoothie = JSON.parse(req.body.smoothie);
+    const { name, description, recipe, visibility, editPictures } = smoothie;
     const smoothieId = req.params.id;
     const user_id = req.user.id; // user data sent from passport
-    const category_ids = req.body.categoryIds;
-    const quantities = req.body.ingredients;
+    const category_ids = smoothie.categoryIds;
+    const quantities = smoothie.ingredients;
+    const pictures = req.file ? req.file.filename : '';
     // reformat property name
     for (let i = 0; i < quantities.length; i += 1) {
       quantities[i].unit_id = quantities[i].unitId;
@@ -135,6 +137,15 @@ const smoothyController = {
           .detach()
           .then(() => smoothy.categories().attach(category_ids))
           .catch(err => next(err));
+        if (pictures) {
+          smoothy.set('pictures', pictures).save();
+          sharp(req.file.path)
+            .resize(1000, 1000)
+            .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
+              if (err) next(err);
+            });
+          // delete previous pictures
+        }
         res.status(200).send({
           smoothy: smoothy.id,
         });
