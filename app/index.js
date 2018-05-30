@@ -15,8 +15,8 @@ app.use(express.static('uploads'));
 app.use(express.static('public'));
 app.use(logger('dev'));
 app.use(cors());
-app.use(bodyParser.json()); // { type: '*/*' }
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' })); // { type: '*/*' }
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 app.use(passport.initialize()); //  not really useful in our case as we don't use session
 
