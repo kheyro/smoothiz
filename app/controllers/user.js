@@ -28,7 +28,9 @@ const userController = {
           { smoothies: qb => loggedIn ? qb : qb.where('visibility', 0), },
           'smoothies.categories',
           'likeSmoothies',
+          { 'likeSmoothies.likeUsers': qb => qb.column('user_id') },
           'smoothies.quantities',
+          { 'smoothies.likeUsers': qb => qb.column('user_id') },
         ],
       })
       .then(user => {
