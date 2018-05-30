@@ -39,6 +39,7 @@ const smoothyController = {
               smoothies: qb =>
                 qb.where('visibility', 0).orderByRaw('created_at DESC'),
             },
+            'user',
             { 'smoothies.likeUsers': qb => qb.column('user_id') },
           ],
         })
@@ -51,7 +52,7 @@ const smoothyController = {
     return Smoothy.where({ visibility: 0 })
       .query(qb => qb.orderByRaw('created_at DESC'))
       .fetchAll({
-        withRelated: [{ likeUsers: qb => qb.column('user_id') }],
+        withRelated: [{ likeUsers: qb => qb.column('user_id') }, 'user'],
       })
       .then(smoothies => res.json({ smoothies }))
       .catch(err => next(err));
