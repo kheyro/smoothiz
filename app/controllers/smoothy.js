@@ -10,7 +10,7 @@ const smoothyController = {
     Smoothy.forge({ id: smoothieId })
       .fetch({
         withRelated: [
-          { user: qb => qb.column('id', 'firstname', 'lastname') },
+          { user: qb => qb.column('id', 'firstname', 'lastname', 'picture') },
           'categories',
           { likeUsers: qb => qb.column('user_id') },
           'quantities',
@@ -39,7 +39,9 @@ const smoothyController = {
               smoothies: qb =>
                 qb.where('visibility', 0).orderByRaw('created_at DESC'),
             },
-            'user',
+            {
+              'smoothies.user': qb => qb.column('id', 'firstname', 'lastname')
+            },
             { 'smoothies.likeUsers': qb => qb.column('user_id') },
           ],
         })
