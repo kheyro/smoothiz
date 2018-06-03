@@ -65,6 +65,7 @@ const requireFacebook = passport.authenticate('facebook', {
   session: false,
 });
 
+router.get('/favicon.ico', (req, res) => res.status(204));
 router.route('/').get(c.application.getIndex);
 router.route('/signin').post(requireSignin, c.authentication.signIn);
 router
