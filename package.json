@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Smoothies social platform for smoothiz lovers!",
   "main": "run-server.js",
+  "engines": {
+    "node": "10.3.0"
+  },
   "scripts": {
     "start": "node run-server.js",
     "dev": "export NODE_ENV=development; export DEBUG=*; nodemon run-server.js",
