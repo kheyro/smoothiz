@@ -37,7 +37,10 @@ const storageSmoothie = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     crypto.pseudoRandomBytes(8, (err, raw) => {
-      cb(null, raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype));
+      cb(
+        null,
+        raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype)
+      );
     });
   },
 });
@@ -64,7 +67,9 @@ const requireFacebook = passport.authenticate('facebook', {
 
 router.route('/').get(c.application.getIndex);
 router.route('/signin').post(requireSignin, c.authentication.signIn);
-router.route('/signup').post(uploadProfilePic.single('picture'), c.authentication.signUp);
+router
+  .route('/signup')
+  .post(uploadProfilePic.single('picture'), c.authentication.signUp);
 router.route('/auth/facebook').get(requireFacebook);
 router.get(
   '/auth/facebook/callback',
@@ -91,7 +96,9 @@ router
   )
   .delete(requireAuth, c.smoothy.deleteSmoothie);
 router.route('/smoothies/:id/like').get(requireAuth, c.smoothy.likeSmoothie);
-router.route('/smoothies/:id/dislike').get(requireAuth, c.smoothy.dislikeSmoothie);
+router
+  .route('/smoothies/:id/dislike')
+  .get(requireAuth, c.smoothy.dislikeSmoothie);
 
 router.route('/categories').get(c.category.getAll);
 router.get('/categories/:categoryId/smoothies', c.smoothy.getSmoothies);
