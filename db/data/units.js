@@ -1,5 +1,5 @@
 module.exports = [
-  { name: 'cup' },
+  { name: 'cups' },
   { name: 'g' },
   { name: 'kg' },
   { name: 'ml' },
