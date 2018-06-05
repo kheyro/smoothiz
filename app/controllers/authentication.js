@@ -72,16 +72,17 @@ const authenticationController = {
   },
   socialSignIn: (req, res) => {
     const { user } = req;
-    res.cookie(
-      'user',
-      JSON.stringify({
-        id: user.id,
-        firstname: user.attributes.firstname,
-        lastname: user.attributes.lastname,
-      })
-    );
-    res.cookie('token', tokenForUser(user));
-    res.redirect(`${globals.CLIENT_SERVER}/users/${user.id}`);
+    // res.cookie(
+    //   'user',
+    //   JSON.stringify({
+    //     id: user.id,
+    //     firstname: user.attributes.firstname,
+    //     lastname: user.attributes.lastname,
+    //   })
+    // );
+    // res.cookie('token', tokenForUser(user));
+    const token = tokenForUser(user);
+    res.redirect(`${globals.CLIENT_SERVER}/users/${user.id}#${token}`);
   },
 };
 
