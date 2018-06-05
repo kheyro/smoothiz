@@ -4,6 +4,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
 const FacebookStrategy = require('passport-facebook');
+const globals = require('./globals');
 
 const localOptions = { usernameField: 'email' };
 
@@ -48,7 +49,7 @@ const facebookLogin = new FacebookStrategy(
   {
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    callbackURL: `${globals.API_SERVER}/auth/facebook/callback`,
     profileFields: [
       'id',
       'email',
