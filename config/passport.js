@@ -63,6 +63,7 @@ const facebookLogin = new FacebookStrategy(
   },
   (accessToken, refreshToken, profile, done) => {
     const userInfo = profile._json;
+    console.log(profile);
     User.forge({ email: userInfo.email })
       .fetch()
       .then(user => {
