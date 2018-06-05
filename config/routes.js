@@ -61,7 +61,7 @@ const router = express.Router();
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
 const requireFacebook = passport.authenticate('facebook', {
-  scope: ['user_birthday', 'user_gender'],
+  scope: ['user_birthday', 'user_gender', 'email'],
   session: false,
 });
 
