@@ -6,6 +6,15 @@ const crypto = require('crypto');
 const mime = require('mime');
 require('./passport'); // Passport services
 const c = require('../app/controllers');
+const sharp = require('sharp');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3-transform');
+const globals = require('./globals');
+
+const s3 = new AWS.S3({
+  apiVersion: '2006-03-01',
+  params: { Bucket: 'smoothiz' },
+});
 
 const fileFilter = (req, file, cb) => {
   const filetypes = /jpg|jpeg|png/;
@@ -19,6 +28,32 @@ const fileFilter = (req, file, cb) => {
     Error: File upload only supports the following filetypes - ${filetypes}`)
   );
 };
+
+const AwsS3Storage = multerS3({
+  s3,
+  acl: 'public-read',
+  bucket: `smoothiz/${globals.SMOOTHIE_PIC}`,
+  contentType: multerS3.AUTO_CONTENT_TYPE,
+  shouldTransform: (req, file, cb) => {
+    cb(null, /^image/i.test(file.mimetype));
+  },
+  transforms: [
+    {
+      id: 'original',
+      key: (req, file, cb) => {
+        crypto.pseudoRandomBytes(8, (err, raw) => {
+          cb(
+            null,
+            raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype)
+          );
+        });
+      },
+      transform: (req, file, cb) => {
+        cb(null, sharp().resize(600, 600));
+      },
+    },
+  ],
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -52,7 +87,7 @@ const uploadProfilePic = multer({
 });
 
 const uploadSmoothiePic = multer({
-  storage: storageSmoothie,
+  storage: AwsS3Storage,
   fileFilter,
   limits: { fileSize: 500000 },
 });
