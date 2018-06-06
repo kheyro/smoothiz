@@ -55,6 +55,32 @@ const AwsS3Storage = multerS3({
   ],
 });
 
+const AwsS3StorageProfile = multerS3({
+  s3,
+  acl: 'public-read',
+  bucket: `smoothiz/${globals.PROFILE_PIC}`,
+  contentType: multerS3.AUTO_CONTENT_TYPE,
+  shouldTransform: (req, file, cb) => {
+    cb(null, /^image/i.test(file.mimetype));
+  },
+  transforms: [
+    {
+      id: 'original',
+      key: (req, file, cb) => {
+        crypto.pseudoRandomBytes(8, (err, raw) => {
+          cb(
+            null,
+            raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype)
+          );
+        });
+      },
+      transform: (req, file, cb) => {
+        cb(null, sharp().resize(200, 200));
+      },
+    },
+  ],
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './uploads/profile/');
@@ -81,7 +107,7 @@ const storageSmoothie = multer.diskStorage({
 });
 
 const uploadProfilePic = multer({
-  storage,
+  storage: AwsS3StorageProfile,
   fileFilter,
   limits: { fileSize: 500000 },
 });
