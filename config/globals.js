@@ -7,4 +7,8 @@ module.exports = {
     process.env.NODE_ENV === 'production'
       ? 'https://smoothiz.herokuapp.com'
       : 'http://localhost:8080',
+  SMOOTHIE_PIC:
+    process.env.NODE_ENV === 'production'
+      ? 'smoothie'
+      : 'dev/smoothie',
 };
