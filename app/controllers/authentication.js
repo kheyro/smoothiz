@@ -36,7 +36,7 @@ const authenticationController = {
         if (model) {
           return res.status(406).json({ error: 'email already in use.' });
         }
-        const picture = req.file ? req.file.filename : '';
+        const picture = req.file ? req.file.transforms[0].key : '';
         return User.forge({
           firstname,
           lastname,
@@ -47,16 +47,16 @@ const authenticationController = {
         })
           .save()
           .then(user => {
-            if (req.file) {
-              sharp(req.file.path)
-                .resize(200, 200)
-                .toFile(
-                  `${req.file.destination}r/${req.file.filename}`,
-                  err => {
-                    if (err) next(err);
-                  }
-                );
-            }
+            // if (req.file) {
+            //   sharp(req.file.path)
+            //     .resize(200, 200)
+            //     .toFile(
+            //       `${req.file.destination}r/${req.file.filename}`,
+            //       err => {
+            //         if (err) next(err);
+            //       }
+            //     );
+            // }
 
             return res.status(201).send({
               token: tokenForUser(user),
