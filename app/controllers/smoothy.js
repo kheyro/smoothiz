@@ -3,6 +3,13 @@ const Category = require('../models/category');
 const Promise = require('bluebird');
 const sharp = require('sharp');
 const fs = require('fs');
+const globals = require('../../config/globals');
+const aws = require('aws-sdk');
+
+const s3 = new aws.S3({
+  apiVersion: '2006-03-01',
+  params: { Bucket: 'smoothiz' },
+});
 
 const smoothyController = {
   getSmoothie: (req, res, next) => {
@@ -64,7 +71,7 @@ const smoothyController = {
     const { name, description, recipe, visibility } = smoothie;
     const user_id = req.user.id; // user data sent from passport
     const quantities = smoothie.ingredients;
-    const pictures = req.file ? req.file.filename : '';
+    const pictures = req.file ? req.file.transforms[0].key : '';
     // reformat property name
     for (let i = 0; i < quantities.length; i += 1) {
       quantities[i].unit_id = quantities[i].unitId;
@@ -89,13 +96,13 @@ const smoothyController = {
       )
       .then(smoothy => {
         smoothy.categories().attach(category_ids);
-        if (req.file) {
-          sharp(req.file.path)
-            .resize(1000, 1000)
-            .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
-              if (err) next(err);
-            });
-        }
+        // if (req.file) {
+        //   sharp(req.file.path)
+        //     .resize(1000, 1000)
+        //     .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
+        //       if (err) next(err);
+        //     });
+        // }
         res.status(201).send({
           smoothy: smoothy.id,
         });
@@ -109,7 +116,7 @@ const smoothyController = {
     const user_id = req.user.id; // user data sent from passport
     const category_ids = smoothie.categoryIds;
     const quantities = smoothie.ingredients;
-    const pictures = req.file ? req.file.filename : '';
+    const pictures = req.file ? req.file.transforms[0].key : '';
     // reformat property name
     for (let i = 0; i < quantities.length; i += 1) {
       quantities[i].unit_id = quantities[i].unitId;
@@ -147,18 +154,27 @@ const smoothyController = {
           .catch(err => next(err));
         if (pictures) {
           smoothy.set('pictures', pictures).save();
-          sharp(req.file.path)
-            .resize(1000, 1000)
-            .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
-              if (err) next(err);
-            });
-          // delete previous pictures
-          fs.unlink(`./uploads/smoothie/${editPictures}`, err => {
-            if (err) next(err);
-          });
-          fs.unlink(`./uploads/smoothie/r/${editPictures}`, err => {
-            if (err) next(err);
-          });
+          // sharp(req.file.path)
+          //   .resize(1000, 1000)
+          //   .toFile(`${req.file.destination}r/${req.file.filename}`, err => {
+          //     if (err) next(err);
+          //   });
+        }
+        // delete previous pictures
+        if (editPictures) {
+          s3.deleteObject(
+            { Key: `${globals.SMOOTHIE_PIC}/${editPictures}` },
+            (err, data) => {
+              if (err) return next(err);
+              return console.log(data);
+            }
+          );
+          // fs.unlink(`./uploads/smoothie/${editPictures}`, err => {
+          //   if (err) next(err);
+          // });
+          // fs.unlink(`./uploads/smoothie/r/${editPictures}`, err => {
+          //   if (err) next(err);
+          // });
         }
         res.status(200).send({
           smoothy: smoothy.id,
@@ -182,12 +198,19 @@ const smoothyController = {
       .destroy()
       .then(() => {
         // pictures is set from previous fetch
-        fs.unlink(`./uploads/smoothie/${pictures}`, err => {
-          if (err) next(err);
-        });
-        fs.unlink(`./uploads/smoothie/r/${pictures}`, err => {
-          if (err) next(err);
-        });
+        // fs.unlink(`./uploads/smoothie/${pictures}`, err => {
+        //   if (err) next(err);
+        // });
+        // fs.unlink(`./uploads/smoothie/r/${pictures}`, err => {
+        //   if (err) next(err);
+        // });
+        s3.deleteObject(
+          { Key: `${globals.SMOOTHIE_PIC}/${pictures}` },
+          (err, data) => {
+            if (err) return next(err);
+            return console.log(data);
+          }
+        );
         res.status(200).json({ success: true });
       })
       .catch(err => next(err));
