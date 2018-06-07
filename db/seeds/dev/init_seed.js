@@ -13,12 +13,12 @@ exports.seed = (knex, Promise) => {
     .then(() => {
       delRestartTbl('quantities');
       delRestartTbl('units');
+      delRestartTbl('smoothies_categories');
       delRestartTbl('smoothies');
       delRestartTbl('users');
       delRestartTbl('ingredients');
       delRestartTbl('categories');
       delRestartTbl('likes');
-      delRestartTbl('smoothies_categories');
     })
     .then(() => knex('units').insert(units))
     .then(() => knex('ingredients').insert(ingredients))
