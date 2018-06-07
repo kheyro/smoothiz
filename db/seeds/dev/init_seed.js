@@ -11,8 +11,8 @@ exports.seed = (knex, Promise) => {
   }
   return new Promise(r => r('done!'))
     .then(() => {
-      delRestartTbl('quantities');
       delRestartTbl('units');
+      delRestartTbl('quantities');
       delRestartTbl('smoothies_categories');
       delRestartTbl('smoothies');
       delRestartTbl('users');
