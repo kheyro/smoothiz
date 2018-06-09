@@ -51,7 +51,7 @@ API_SERVER:
 **Production**
 `npm start`
 
-#TODO
+# TODO
 * Data model validation
 * Deploy on docker (remove AWS S3 picture upload)
 * Generate random password for social signin
