@@ -23,14 +23,14 @@ production: {
     
 ```
 
-##Run migrations
+## Run migrations
 `knex migrate:latest --env <your-env>`, --env is optional it will look at your current environment variable (`process.env.NODE_ENV`), if it is not production it will default to development.
 
-##Seed the database
+## Seed the database
 Seeds are located at `/db/data/`.
 `knex seed:run`
 
-##Development / Production URL
+# Development / Production URL
 Define your development client/server, production client/server URL
 ```
 API_SERVER:
